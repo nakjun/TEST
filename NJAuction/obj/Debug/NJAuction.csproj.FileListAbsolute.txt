@@ -7,3 +7,12 @@ C:\Users\nj\Desktop\NJAuction\NJAuction\obj\Debug\NJAuction.exe
 C:\Users\nj\Desktop\NJAuction\NJAuction\obj\Debug\NJAuction.pdb
 C:\Users\nj\Desktop\NJAuction\NJAuction\bin\Debug\NJAuction.pdb
 C:\Users\nj\Desktop\NJAuction\NJAuction\obj\Debug\NJAuction.csprojResolveAssemblyReference.cache
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\NJAuction.exe.config
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.exe
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.pdb
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\NJAuction.exe
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\NJAuction.pdb
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.csprojResolveAssemblyReference.cache
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Form1.resources
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Properties.Resources.resources
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.csproj.GenerateResource.Cache

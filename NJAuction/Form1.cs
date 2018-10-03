@@ -138,45 +138,36 @@ namespace NJAuction
 
                 keybd_event(VK_V, 0, 0, ref Info);
 
-                Thread.Sleep(10);
+                Thread.Sleep(5);
 
                 keybd_event(VK_V, 0, KEYUP, ref Info);
 
                 keybd_event(Ctrl, 0, KEYUP, ref Info);
             }
 
-            Thread.Sleep(timestep);
-            
-            SetCursorPos(476, 528); // 구매하기 버튼
+            //SetCursorPos(476, 528); // 구매하기 버튼
 
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            //mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            //mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-            Thread.Sleep(timestep);
+            //Thread.Sleep(timestep);
 
             keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(10);
+            Thread.Sleep(1000);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            Thread.Sleep(timestep);
+            //Thread.Sleep(timestep);
 
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(10);
-            keybd_event(EnterKey, 0, KEYUP, ref Info);
+            //SetCursorPos(476, 528); // 구매하기 버튼
 
-            Thread.Sleep(timestep);
+            //mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            //mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-            SetCursorPos(476, 528); // 구매하기 버튼
-
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
-            Thread.Sleep(75);
+            //Thread.Sleep(75);
         }
 
         public static void singleBuy()
-        {
-            string[] search;           
+        {            
             int Info = 0;
 
             //MOUSE CLICK VERSION CODE
@@ -185,80 +176,14 @@ namespace NJAuction
             mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
             mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-            //mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            //mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            keybd_event(EnterKey, 0, KEYDOWN, ref Info);            
 
-            Thread.Sleep(timestep);
-
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-                        
-            Thread.Sleep(timestep);
-
-            search = UseImageSearch("*50 img\\itemOK.png");
-            if (search == null)
-            {
-
-            }
-            else
+            string[] search = UseImageSearch("*50 img\\itemOK.png");
+            if (search != null)
             {
                 keybd_event(EnterKey, 0, KEYUP, ref Info);
-
                 buy();
-            }
-            
-            //IMAGE SEARCH VERSION CODE
-            /*
-            search = UseImageSearch("*50 img\\search.png");
-            if (search == null)
-            {
-                SetCursorPos(639, 225); // 소비템 입력창
-
-                mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-                mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-            }
-            else
-            {
-                X = Convert.ToInt32(search[1]);
-                Y = Convert.ToInt32(search[2]);
-
-                MessageBox.Show(X + "," + Y + "");
-
-                SetCursorPos(X, Y); // 기타탬 탭 위치
-
-                mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-                mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
-                mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-                mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
-                Thread.Sleep(timestep);
-                
-                keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-
-
-                Thread.Sleep(1);
-                keybd_event(EnterKey, 0, KEYUP, ref Info);
-
-                Thread.Sleep(timestep);
-
-                keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(1);
-                keybd_event(EnterKey, 0, KEYUP, ref Info);
-
-                Thread.Sleep(timestep);
-                
-                search = UseImageSearch("*50 img\\itemOK.png");
-                if (search == null)
-                {
-
-                }
-                else
-                {
-                    buy();
-                }
-                
-            }
-            */
+            }            
         }
 
         static void ThreadProc()
@@ -351,9 +276,12 @@ namespace NJAuction
         }
         [STAThreadAttribute]
         static void ThreadCashAuction()
-        {            
+        {
             for (; ; )
             {
+                
+                singleBuy();
+                /*
                 string[] search;
                 int Info = 0;
 
@@ -433,8 +361,9 @@ namespace NJAuction
                     mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
                     mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-                    Thread.Sleep(45);
+                    Thread.Sleep(45);                
                 }
+                */
             }
         }
         [STAThreadAttribute]
