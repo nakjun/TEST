@@ -16,3 +16,4 @@ C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.csprojResolveAss
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Form1.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Properties.Resources.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.csproj.GenerateResource.Cache
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Meso.resources
