@@ -199,10 +199,9 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 구매 시도");
+            LogBox.SelectedIndex = LogBox.Items.Count - 1;
 
             Thread.Sleep(200);
-
-            
         }
 
         public static void singleBuy(int Info)
@@ -247,6 +246,7 @@ namespace NJAuction
                         AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
                         string currTime = getCurrentTime();
                         LogBox.Items.Add(currTime + " 매크로 중지");
+                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
                     }
                     if (CashAuction_Thread_Flag == true)
                     {
@@ -254,6 +254,7 @@ namespace NJAuction
                         AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
                         string currTime = getCurrentTime();
                         LogBox.Items.Add(currTime + " 매크로 중지");
+                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
                     }
                 }
                 if (GetAsyncKeyState(113) == -32767)
@@ -291,6 +292,7 @@ namespace NJAuction
                     Auction_Thread_Flag = true;
                     string currTime = getCurrentTime();
                     LogBox.Items.Add(currTime + " 소비/기타 시작");
+                    LogBox.SelectedIndex = LogBox.Items.Count - 1;
                 }
                 if (GetAsyncKeyState(123) == -32767)
                 {
@@ -317,6 +319,7 @@ namespace NJAuction
                     CashAuction_Thread_Flag = true;
                     string currTime = getCurrentTime();
                     LogBox.Items.Add(currTime + " 장비/캐시 시작");
+                    LogBox.SelectedIndex = LogBox.Items.Count - 1;
                 }         
             }
         }
@@ -514,6 +517,7 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 소비/기타 시작");
+            LogBox.SelectedIndex = LogBox.Items.Count - 1;
         }
         private void button3_Click(object sender, EventArgs e)
         {            
@@ -541,6 +545,7 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 장비/캐시 시작");
+            LogBox.SelectedIndex = LogBox.Items.Count - 1;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -551,6 +556,7 @@ namespace NJAuction
                 AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
                 string currTime = getCurrentTime();
                 LogBox.Items.Add(currTime + " 매크로 중지");
+                LogBox.SelectedIndex = LogBox.Items.Count - 1;
             }
             if (CashAuction_Thread_Flag == true)
             {
@@ -558,6 +564,7 @@ namespace NJAuction
                 AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
                 string currTime = getCurrentTime();
                 LogBox.Items.Add(currTime + " 매크로 중지");
+                LogBox.SelectedIndex = LogBox.Items.Count - 1;
             }
         }
 
