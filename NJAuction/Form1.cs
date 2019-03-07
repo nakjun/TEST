@@ -8,14 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
 using System.Drawing.Imaging;
+
 namespace NJAuction
 {
     public partial class Form1 : Form
     {
+        
         [DllImport("ImageSearchDLL.dll")]
         private static extern IntPtr ImageSearch(int x, int y, int right, int bottom, [MarshalAs(UnmanagedType.LPStr)]string imagePath);
 
@@ -65,6 +68,7 @@ namespace NJAuction
         const byte Ctrl = 0x11;
         const byte EnterKey = 0x0D;
         const byte nineKey = 0x39;
+        const byte F12KEY = 0x7B;
 
         static int globalX=0;
         static int globalY=0;
@@ -93,6 +97,7 @@ namespace NJAuction
         static TextBox tb1;
         static PictureBox PB;
         static ListBox LogBox;
+        static CheckBox CB1,CB2;
 
 
         static List<Item> itemlist;
@@ -111,8 +116,8 @@ namespace NJAuction
 
         static int right;
         static int bottom;
-
-
+        
+        
         public Form1()
         {            
             InitializeComponent();
@@ -133,6 +138,7 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 프로그램 시작");
+                        
         }
 
         public static string getCurrentTime()
@@ -147,10 +153,9 @@ namespace NJAuction
         }
 
         public static void buy(int Info)
-        {
-            buyCount++;
+        {            
             Thread.Sleep(10);
-            
+                        
             SetCursorPos(639, 225); //맨위아이템
 
             Thread.Sleep(5);
@@ -172,19 +177,19 @@ namespace NJAuction
             if(threadtype==1)
             {
                 keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(5);
+                Thread.Sleep(2);
                 keybd_event(nineKey, 0, KEYUP, ref Info);
 
                 keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(5);
+                Thread.Sleep(2);
                 keybd_event(nineKey, 0, KEYUP, ref Info);
 
                 keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(5);
+                Thread.Sleep(2);
                 keybd_event(nineKey, 0, KEYUP, ref Info);
 
                 keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(5);
+                Thread.Sleep(2);
                 keybd_event(nineKey, 0, KEYUP, ref Info);
 
                 keybd_event(EnterKey, 0, KEYDOWN, ref Info);
@@ -201,7 +206,9 @@ namespace NJAuction
             LogBox.Items.Add(currTime + " 구매 시도");
             LogBox.SelectedIndex = LogBox.Items.Count - 1;
 
-            Thread.Sleep(200);
+            buyCount++;
+
+            Thread.Sleep(700);
         }
 
         public static void singleBuy(int Info)
@@ -230,7 +237,8 @@ namespace NJAuction
             if (search != null)
             {                
                 buy(Info);
-            }            
+                return;
+            }
         }
 
         [STAThreadAttribute]
@@ -238,6 +246,7 @@ namespace NJAuction
         {            
             for (; ; )
             {   
+                
                 if (GetAsyncKeyState(112) == -32767)
                 {                    
                     if (Auction_Thread_Flag == true)
@@ -334,19 +343,17 @@ namespace NJAuction
         }
         [STAThreadAttribute]
         static void ThreadAuction()
-        {            
-            int currentCount = 0;
+        {
+            int current_count = 0;
             int Info = 0;            
             int X;
             int Y;
             for (; ; )
             {
                 singleBuy(Info);
-                currentCount++;
-                
-                if (currentCount == 10000)
-                {
-                    currentCount = 0;
+                current_count++;
+                if (current_count == 5000)
+                {                    
                     search = UseImageSearch("*50 img\\complete.png");
                     if (search == null)
                     {
@@ -436,6 +443,10 @@ namespace NJAuction
                                 mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
                                 mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
+                                string currTime = getCurrentTime();
+                                LogBox.Items.Add(currTime + " 물품 수령/초기화");
+                                LogBox.SelectedIndex = LogBox.Items.Count - 1;
+                                current_count = 0;
                                 Thread.Sleep(50);
                             }
                         }
@@ -443,7 +454,7 @@ namespace NJAuction
                 }              
             }   
         }
-
+        
         public static String[] UseImageSearch(string imgPath)
         {
             IntPtr result = ImageSearch(0, 0, right, bottom, imgPath);
@@ -570,7 +581,7 @@ namespace NJAuction
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            
+            timestep = Int32.Parse(textBox1.Text);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -583,70 +594,6 @@ namespace NJAuction
                 }
             }
         }
-        public static IntPtr Client_Connection(string clientname)
-        {
-            IntPtr iResulthwnd = new IntPtr();
-            int inthwnd = FindWindow(null, clientname);
-            if (inthwnd == 0)
-            {
-                iResulthwnd = new IntPtr(inthwnd);
-            }
-            else
-            {
-                iResulthwnd = new IntPtr(inthwnd);
-            }
-            return iResulthwnd;
-        }
 
-        private static Bitmap cropImage(Bitmap img, Rectangle cropArea)
-        {
-            Bitmap nb = new Bitmap(cropArea.Width, cropArea.Height);
-            Graphics g = Graphics.FromImage(nb);
-            g.DrawImage(img, -cropArea.X, -cropArea.Y);
-            return nb;
-        }
-
-        public static Bitmap PrintWindow(IntPtr hwnd)
-        {
-
-            Rectangle rc = Rectangle.Empty;
-
-            Graphics gfxWin = Graphics.FromHwnd(hwnd);
-
-            rc = Rectangle.Round(gfxWin.VisibleClipBounds);
-
-            Bitmap bmp = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
-
-            Graphics gfxBmp = Graphics.FromImage(bmp);
-
-            IntPtr hdcBitmap = gfxBmp.GetHdc();
-
-            bool succeeded = PrintWindow(hwnd, hdcBitmap, 1);
-
-            gfxBmp.ReleaseHdc(hdcBitmap);
-
-            if (!succeeded)
-            {
-                gfxBmp.FillRectangle(
-                    new SolidBrush(Color.Gray),
-                    new Rectangle(Point.Empty, bmp.Size));
-            }
-
-            IntPtr hRgn = CreateRectRgn(0, 0, 0, 0);
-            GetWindowRgn(hwnd, hRgn);
-            Region region = Region.FromHrgn(hRgn);
-            if (!region.IsEmpty(gfxBmp))
-            {
-                gfxBmp.ExcludeClip(region);
-                gfxBmp.Clear(Color.Transparent);
-            }
-
-            gfxBmp.Dispose();
-
-            Bitmap nb = cropImage(bmp, new Rectangle(850, 50, 100, 20));
-
-            return nb;
-        }
-        
     }    
 }
