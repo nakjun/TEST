@@ -176,7 +176,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.Azure;
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
@@ -210,12 +210,13 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(205, 15);
             this.label8.TabIndex = 30;
-            this.label8.Text = "NJ AUCTION V6.1[190307_REALESE]";
+            this.label8.Text = "NJ AUCTION V7.2[190319_REALESE]";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(504, 236);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);

@@ -25,6 +25,12 @@ namespace NJAuction
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern int GetAsyncKeyState(int vKey);
 
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+        public static extern int BitBlt(IntPtr hDC, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+
+        [DllImport("gdi32.dll")]
+        static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
+
         [DllImport("user32.dll")]
         private static extern int FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll")]
@@ -116,8 +122,15 @@ namespace NJAuction
 
         static int right;
         static int bottom;
-        
-        
+
+        static Rectangle rect;
+        static int bitsPerPixel;
+        static Bitmap bitmap;
+        static PixelFormat pixelFormat;
+        static Graphics gr;
+        static Color pixelcolor;
+
+        static Bitmap screenPixel = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
         public Form1()
         {            
             InitializeComponent();
@@ -138,7 +151,7 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 프로그램 시작");
-                        
+
         }
 
         public static string getCurrentTime()
@@ -153,13 +166,21 @@ namespace NJAuction
         }
 
         public static void buy(int Info)
-        {            
+        {   
             Thread.Sleep(10);
                         
             SetCursorPos(639, 225); //맨위아이템
 
             Thread.Sleep(5);
 
+            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
             mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
             mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
@@ -200,15 +221,20 @@ namespace NJAuction
             Thread.Sleep(5);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            lb1.Text = buyCount.ToString();
+            Thread.Sleep(300);
 
-            string currTime = getCurrentTime();
-            LogBox.Items.Add(currTime + " 구매 시도");
-            LogBox.SelectedIndex = LogBox.Items.Count - 1;
+            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
+            Thread.Sleep(5);
+            keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            buyCount++;
+            Thread.Sleep(3);
 
-            Thread.Sleep(700);
+            SetCursorPos(640, 500); //검색하기 버튼 위치
+
+            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+
+
         }
 
         public static void singleBuy(int Info)
@@ -223,21 +249,9 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            Thread.Sleep(timestep);
-
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(1);
-            keybd_event(EnterKey, 0, KEYUP, ref Info);
-
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(1);
-            keybd_event(EnterKey, 0, KEYUP, ref Info);
-
-            search = UseImageSearch("*50 img\\itemOK.png");
-            if (search != null)
+            if (!get_window_pixel().Equals("34"))
             {                
                 buy(Info);
-                return;
             }
         }
 
@@ -593,6 +607,63 @@ namespace NJAuction
                     process.Kill();
                 }
             }
+        }
+
+        private static string get_window_pixel()
+        {
+            /*
+            // 주화면의 크기 정보 읽기
+            rect = new Rectangle(0, 0, 1030, 797);   
+            // 2nd screen = Screen.AllScreens[1]
+
+            // 픽셀 포맷 정보 얻기 (Optional)
+            bitsPerPixel = Screen.PrimaryScreen.BitsPerPixel;
+            pixelFormat = PixelFormat.Format32bppArgb;
+            
+            // 화면 크기만큼의 Bitmap 생성
+            bitmap = new Bitmap(rect.Width, rect.Height, pixelFormat);
+
+            // Bitmap 이미지 변경을 위해 Graphics 객체 생성
+            using (gr = Graphics.FromImage(bitmap))
+            {
+                // 화면을 그대로 카피해서 Bitmap 메모리에 저장
+                gr.CopyFromScreen(rect.Left, rect.Top, 0, 0, rect.Size);
+            }
+
+            pixelcolor = bitmap.GetPixel(604, 162);
+
+            return pixelcolor.R.ToString();
+            */
+            /*
+            IntPtr hdc = (IntPtr)hWnd;
+            uint pixel = GetPixel(hdc, 300, 162);
+            Color color = Color.FromArgb((int)(pixel & 0x000000FF),
+                    (int)(pixel & 0x0000FF00) >> 8,
+                    (int)(pixel & 0x00FF0000) >> 16);
+            MessageBox.Show(color.R + " " + color.G + " " + color.B);
+            return color.R.ToString();
+            */
+            
+            using (Graphics gdest = Graphics.FromImage(screenPixel))
+            {
+                using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
+                {
+                    IntPtr hSrcDC = gsrc.GetHdc();
+                    IntPtr hDC = gdest.GetHdc();
+                    int retval = BitBlt(hDC, 0, 0, 1, 1, hSrcDC, 604, 162, (int)CopyPixelOperation.SourceCopy);
+                    gdest.ReleaseHdc();
+                    gsrc.ReleaseHdc();
+                }
+            }
+            //MessageBox.Show(screenPixel.GetPixel(0, 0).ToString());
+            return screenPixel.GetPixel(0,0).R.ToString();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            get_window_pixel();
+
+            //MessageBox.Show(Control.MousePosition.X.ToString() + " " + Control.MousePosition.Y.ToString());
         }
 
     }    
