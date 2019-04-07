@@ -166,25 +166,19 @@ namespace NJAuction
         }
 
         public static void buy(int Info)
-        {   
-            Thread.Sleep(10);
-                        
-            SetCursorPos(639, 225); //맨위아이템
+        {
+            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
 
             Thread.Sleep(5);
 
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+            SetCursorPos(639, 225); //맨위아이템
+
+            Thread.Sleep(15);
+
             mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
             mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-            Thread.Sleep(10);
+            Thread.Sleep(5);
             
             SetCursorPos(938, 750); // 구매하기버튼
 
@@ -193,7 +187,7 @@ namespace NJAuction
             mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
             mouse_event(LBUP, 0, 0, 0, 0); // 떼고
 
-            Thread.Sleep(15);
+            Thread.Sleep(5);
 
             if(threadtype==1)
             {
@@ -217,24 +211,15 @@ namespace NJAuction
                 Thread.Sleep(5);
                 keybd_event(EnterKey, 0, KEYUP, ref Info);
             }
+            keybd_event(EnterKey, 0, KEYUP, ref Info);
+
+            Thread.Sleep(10);
+
             keybd_event(EnterKey, 0, KEYDOWN, ref Info);
             Thread.Sleep(5);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            Thread.Sleep(300);
-
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(5);
-            keybd_event(EnterKey, 0, KEYUP, ref Info);
-
-            Thread.Sleep(3);
-
-            SetCursorPos(640, 500); //검색하기 버튼 위치
-
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
-
+            Thread.Sleep(100);
         }
 
         public static void singleBuy(int Info)
@@ -249,10 +234,20 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            if (!get_window_pixel().Equals("34"))
+            if (!get_window_pixel(604, 162).Equals("34") && get_window_pixel(284,217).Equals("204"))
             {                
                 buy(Info);
+                
+                string currTime = getCurrentTime();
+                LogBox.Items.Add(currTime + " 구매 시도 ");
+                LogBox.SelectedIndex = LogBox.Items.Count - 1;
+
+                buyCount++;
+
+                lb1.Text = buyCount.ToString();
+                Thread.Sleep(50);
             }
+
         }
 
         [STAThreadAttribute]
@@ -533,8 +528,7 @@ namespace NJAuction
                 globalY = Convert.ToInt32(search[2]);
             }            
             
-            threadtype = 1;
-            timestep = Int32.Parse(textBox1.Text);
+            threadtype = 1;            
             Auction_Thread = new Thread(new ThreadStart(ThreadAuction));
             Auction_Thread.SetApartmentState(ApartmentState.STA);
             Auction_Thread.Start();
@@ -561,8 +555,7 @@ namespace NJAuction
                 globalY = Convert.ToInt32(search[2]);
             }
 
-            threadtype = 2;
-            timestep = Int32.Parse(textBox1.Text);
+            threadtype = 2;            
             CashAuction_Thread = new Thread(new ThreadStart(ThreadCashAuction));
             CashAuction_Thread.SetApartmentState(ApartmentState.STA);
             CashAuction_Thread.Start();
@@ -595,7 +588,6 @@ namespace NJAuction
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            timestep = Int32.Parse(textBox1.Text);
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -609,48 +601,15 @@ namespace NJAuction
             }
         }
 
-        private static string get_window_pixel()
-        {
-            /*
-            // 주화면의 크기 정보 읽기
-            rect = new Rectangle(0, 0, 1030, 797);   
-            // 2nd screen = Screen.AllScreens[1]
-
-            // 픽셀 포맷 정보 얻기 (Optional)
-            bitsPerPixel = Screen.PrimaryScreen.BitsPerPixel;
-            pixelFormat = PixelFormat.Format32bppArgb;
-            
-            // 화면 크기만큼의 Bitmap 생성
-            bitmap = new Bitmap(rect.Width, rect.Height, pixelFormat);
-
-            // Bitmap 이미지 변경을 위해 Graphics 객체 생성
-            using (gr = Graphics.FromImage(bitmap))
-            {
-                // 화면을 그대로 카피해서 Bitmap 메모리에 저장
-                gr.CopyFromScreen(rect.Left, rect.Top, 0, 0, rect.Size);
-            }
-
-            pixelcolor = bitmap.GetPixel(604, 162);
-
-            return pixelcolor.R.ToString();
-            */
-            /*
-            IntPtr hdc = (IntPtr)hWnd;
-            uint pixel = GetPixel(hdc, 300, 162);
-            Color color = Color.FromArgb((int)(pixel & 0x000000FF),
-                    (int)(pixel & 0x0000FF00) >> 8,
-                    (int)(pixel & 0x00FF0000) >> 16);
-            MessageBox.Show(color.R + " " + color.G + " " + color.B);
-            return color.R.ToString();
-            */
-            
+        private static string get_window_pixel(int x, int y)
+        {   
             using (Graphics gdest = Graphics.FromImage(screenPixel))
             {
                 using (Graphics gsrc = Graphics.FromHwnd(IntPtr.Zero))
                 {
                     IntPtr hSrcDC = gsrc.GetHdc();
                     IntPtr hDC = gdest.GetHdc();
-                    int retval = BitBlt(hDC, 0, 0, 1, 1, hSrcDC, 604, 162, (int)CopyPixelOperation.SourceCopy);
+                    int retval = BitBlt(hDC, 0, 0, 1, 1, hSrcDC, x, y, (int)CopyPixelOperation.SourceCopy);
                     gdest.ReleaseHdc();
                     gsrc.ReleaseHdc();
                 }
@@ -659,9 +618,14 @@ namespace NJAuction
             return screenPixel.GetPixel(0,0).R.ToString();
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void label8_Click(object sender, EventArgs e)
         {
-            get_window_pixel();
+
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show(get_window_pixel(284, 217).ToString());
 
             //MessageBox.Show(Control.MousePosition.X.ToString() + " " + Control.MousePosition.Y.ToString());
         }
