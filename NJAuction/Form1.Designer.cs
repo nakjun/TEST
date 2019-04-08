@@ -39,8 +39,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,7 +137,7 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(255, 31);
+            this.listBox1.Location = new System.Drawing.Point(255, 45);
             this.listBox1.Name = "listBox1";
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(237, 169);
@@ -152,37 +154,56 @@
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Location = new System.Drawing.Point(5, 22);
+            this.panel1.Location = new System.Drawing.Point(5, 36);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(491, 186);
             this.panel1.TabIndex = 28;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(292, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(205, 15);
+            this.label8.TabIndex = 30;
+            this.label8.Text = "NJ AUCTION V7.5[190408_REALESE]";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label7.Location = new System.Drawing.Point(7, 4);
+            this.label7.Location = new System.Drawing.Point(18, 9);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(43, 15);
+            this.label7.Size = new System.Drawing.Size(19, 15);
             this.label7.TabIndex = 29;
-            this.label7.Text = "대기중";
+            this.label7.Text = "ID";
             // 
-            // label8
+            // textBox1
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(292, 3);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(205, 15);
-            this.label8.TabIndex = 30;
-            this.label8.Text = "NJ AUCTION V7.4[190407_REALESE]";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
+            this.textBox1.Location = new System.Drawing.Point(55, 5);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 23);
+            this.textBox1.TabIndex = 31;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(161, 5);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 25);
+            this.button5.TabIndex = 32;
+            this.button5.Text = "저장";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(504, 213);
+            this.ClientSize = new System.Drawing.Size(504, 229);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.listBox1);
@@ -214,8 +235,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button5;
     }
 }
 

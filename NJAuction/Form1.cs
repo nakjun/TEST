@@ -14,11 +14,13 @@ using System.Threading;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 
+
 namespace NJAuction
 {
     public partial class Form1 : Form
     {
         
+            
         [DllImport("ImageSearchDLL.dll")]
         private static extern IntPtr ImageSearch(int x, int y, int right, int bottom, [MarshalAs(UnmanagedType.LPStr)]string imagePath);
 
@@ -131,6 +133,12 @@ namespace NJAuction
         static Color pixelcolor;
 
         static Bitmap screenPixel = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+
+        static HttpWebRequest wReq;
+        static HttpWebResponse wRes;
+
+        static string SYSTEMID = "";
+
         public Form1()
         {            
             InitializeComponent();
@@ -165,28 +173,40 @@ namespace NJAuction
             //listView2.Items.Add()
         }
 
+        public static void HttpGet(string type)
+        {
+            string url = "http://220.69.209.170/nj/insert.php?";
+            url += "id="+SYSTEMID;
+            url += "&time="+getCurrentTime();
+            url += "&status=" + type;
+
+            WebRequest request = WebRequest.Create(url);
+            WebResponse response = request.GetResponse();
+        }
+
+
         public static void buy(int Info)
         {
-            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-
-            Thread.Sleep(5);
-
-            SetCursorPos(639, 225); //맨위아이템
-
             Thread.Sleep(15);
-
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
+            keybd_event(EnterKey, 0, KEYDOWN, ref Info);
+            SetCursorPos(639, 225); //맨위아이템
+            for (; ;)
+            {                
+                mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+                mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+                if(get_window_pixel(533, 231).Equals("119")) break;
+            }
+            
             Thread.Sleep(5);
             
             SetCursorPos(938, 750); // 구매하기버튼
-
-            Thread.Sleep(5);
-
-            mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
-            mouse_event(LBUP, 0, 0, 0, 0); // 떼고
-
+            for (; ; )
+            {
+                mouse_event(LBDOWN, 0, 0, 0, 0); // 왼쪽 버튼 누르고            
+                mouse_event(LBUP, 0, 0, 0, 0); // 떼고
+                if (get_window_pixel(431, 523).Equals("170")) break;
+            }
+            
             Thread.Sleep(5);
 
             if(threadtype==1)
@@ -219,7 +239,8 @@ namespace NJAuction
             Thread.Sleep(5);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            Thread.Sleep(100);
+            HttpGet("구매시도");           
+            
         }
 
         public static void singleBuy(int Info)
@@ -245,9 +266,8 @@ namespace NJAuction
                 buyCount++;
 
                 lb1.Text = buyCount.ToString();
-                Thread.Sleep(50);
+                Thread.Sleep(500);
             }
-
         }
 
         [STAThreadAttribute]
@@ -615,7 +635,7 @@ namespace NJAuction
                 }
             }
             //MessageBox.Show(screenPixel.GetPixel(0, 0).ToString());
-            return screenPixel.GetPixel(0,0).R.ToString();
+            return screenPixel.GetPixel(0,0).G.ToString();
         }
 
         private void label8_Click(object sender, EventArgs e)
@@ -623,9 +643,18 @@ namespace NJAuction
 
         }
 
-        private void button5_Click_1(object sender, EventArgs e)
+        private void button5_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(get_window_pixel(284, 217).ToString());
+            SYSTEMID = this.textBox1.Text;            
+            MessageBox.Show("아이디가 잘 저장되었습니다");
+            
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(get_window_pixel(431, 523).ToString());
+            //MessageBox.Show(get_window_pixel(604, 162).ToString());
+            //MessageBox.Show(get_window_pixel(284, 217).ToString());
 
             //MessageBox.Show(Control.MousePosition.X.ToString() + " " + Control.MousePosition.Y.ToString());
         }
