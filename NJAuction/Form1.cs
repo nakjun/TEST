@@ -187,7 +187,6 @@ namespace NJAuction
 
         public static void buy(int Info)
         {
-            Thread.Sleep(15);
             keybd_event(EnterKey, 0, KEYDOWN, ref Info);
             SetCursorPos(639, 225); //맨위아이템
             for (; ;)
@@ -197,8 +196,6 @@ namespace NJAuction
                 if(get_window_pixel(533, 231).Equals("119")) break;
             }
             
-            Thread.Sleep(5);
-            
             SetCursorPos(938, 750); // 구매하기버튼
             for (; ; )
             {
@@ -206,9 +203,6 @@ namespace NJAuction
                 mouse_event(LBUP, 0, 0, 0, 0); // 떼고
                 if (get_window_pixel(431, 523).Equals("170")) break;
             }
-            
-            Thread.Sleep(5);
-
             if(threadtype==1)
             {
                 keybd_event(nineKey, 0, KEYDOWN, ref Info);
@@ -233,10 +227,8 @@ namespace NJAuction
             }
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            Thread.Sleep(10);
-
             keybd_event(EnterKey, 0, KEYDOWN, ref Info);
-            Thread.Sleep(5);
+            Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
             HttpGet("구매시도");           
@@ -266,7 +258,7 @@ namespace NJAuction
                 buyCount++;
 
                 lb1.Text = buyCount.ToString();
-                Thread.Sleep(500);
+                Thread.Sleep(1);
             }
         }
 

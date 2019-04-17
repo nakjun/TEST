@@ -164,9 +164,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(292, 11);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(205, 15);
+            this.label8.Size = new System.Drawing.Size(192, 15);
             this.label8.TabIndex = 30;
-            this.label8.Text = "NJ AUCTION V7.5[190408_REALESE]";
+            this.label8.Text = "NJ AUCTION V7.6[FAST VERSION]";
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // label7
