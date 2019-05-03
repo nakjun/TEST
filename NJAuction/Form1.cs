@@ -282,116 +282,119 @@ namespace NJAuction
         [STAThreadAttribute]
         static void ThreadProc()
         {
-            int Info = 0;
+            for(;;)
             {
-                if (GetAsyncKeyState(112) == -32767)
+                int Info = 0;
                 {
-                    if (Auction_Thread_Flag == true)
+                    if (GetAsyncKeyState(112) == -32767)
                     {
-                        Auction_Thread.Abort();
-                        AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
-                        string currTime = getCurrentTime();
-                        LogBox.Items.Add(currTime + " 매크로 중지");
-                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
-                    }
-                    if (CashAuction_Thread_Flag == true)
-                    {
-                        CashAuction_Thread.Abort();
-                        AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
-                        string currTime = getCurrentTime();
-                        LogBox.Items.Add(currTime + " 매크로 중지");
-                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
-                    }
-                    if (Sell_Thread_Flag == true)
-                    {
-                        Sell_Thread.Abort();
-                    }
-                }
-                if (GetAsyncKeyState(113) == -32767)
-                {
-
-                    foreach (Process process in Process.GetProcesses())
-                    {
-                        if (process.ProcessName.ToUpper().StartsWith("NJ"))
+                        if (Auction_Thread_Flag == true)
                         {
-                            process.Kill();
+                            Auction_Thread.Abort();
+                            AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
+                            string currTime = getCurrentTime();
+                            LogBox.Items.Add(currTime + " 매크로 중지");
+                            LogBox.SelectedIndex = LogBox.Items.Count - 1;
+                        }
+                        if (CashAuction_Thread_Flag == true)
+                        {
+                            CashAuction_Thread.Abort();
+                            AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
+                            string currTime = getCurrentTime();
+                            LogBox.Items.Add(currTime + " 매크로 중지");
+                            LogBox.SelectedIndex = LogBox.Items.Count - 1;
+                        }
+                        if (Sell_Thread_Flag == true)
+                        {
+                            Sell_Thread.Abort();
                         }
                     }
-                }
-                if (GetAsyncKeyState(122) == -32767)
-                {
-                    SetForegroundWindow(hWnd);
-                    SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
-
-                    string[] search;
-                    search = UseImageSearch("*50 img\\search.png");
-                    if (search == null)
+                    if (GetAsyncKeyState(113) == -32767)
                     {
 
+                        foreach (Process process in Process.GetProcesses())
+                        {
+                            if (process.ProcessName.ToUpper().StartsWith("NJ"))
+                            {
+                                process.Kill();
+                            }
+                        }
                     }
-                    else
+                    if (GetAsyncKeyState(122) == -32767)
                     {
-                        globalX = Convert.ToInt32(search[1]);
-                        globalY = Convert.ToInt32(search[2]);
+                        SetForegroundWindow(hWnd);
+                        SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
+
+                        string[] search;
+                        search = UseImageSearch("*50 img\\search.png");
+                        if (search == null)
+                        {
+
+                        }
+                        else
+                        {
+                            globalX = Convert.ToInt32(search[1]);
+                            globalY = Convert.ToInt32(search[2]);
+                        }
+
+                        threadtype = 1;
+
+                        Auction_Thread = new Thread(new ThreadStart(ThreadAuction));
+                        Auction_Thread.SetApartmentState(ApartmentState.STA);
+                        Auction_Thread.Start();
+                        Auction_Thread_Flag = true;
+
+                        if (sellItemList.Count > 0)
+                        {
+                            Sell_Thread = new Thread(new ThreadStart(ThreadSell));
+                            Sell_Thread.SetApartmentState(ApartmentState.STA);
+                            Sell_Thread.Start();
+                            Sell_Thread_Flag = true;
+                        }
+
+                        string currTime = getCurrentTime();
+                        LogBox.Items.Add(currTime + " 소비/기타 시작");
+                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
                     }
-
-                    threadtype = 1;
-
-                    Auction_Thread = new Thread(new ThreadStart(ThreadAuction));
-                    Auction_Thread.SetApartmentState(ApartmentState.STA);
-                    Auction_Thread.Start();
-                    Auction_Thread_Flag = true;
-
-                    if (sellItemList.Count > 0)
+                    if (GetAsyncKeyState(123) == -32767)
                     {
-                        Sell_Thread = new Thread(new ThreadStart(ThreadSell));
-                        Sell_Thread.SetApartmentState(ApartmentState.STA);
-                        Sell_Thread.Start();
-                        Sell_Thread_Flag = true;
+                        SetForegroundWindow(hWnd);
+                        SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
+
+                        string[] search;
+                        search = UseImageSearch("*50 img\\search.png");
+                        if (search == null)
+                        {
+
+                        }
+                        else
+                        {
+                            globalX = Convert.ToInt32(search[1]);
+                            globalY = Convert.ToInt32(search[2]);
+                        }
+
+                        threadtype = 2;
+
+                        CashAuction_Thread = new Thread(new ThreadStart(ThreadCashAuction));
+                        CashAuction_Thread.SetApartmentState(ApartmentState.STA);
+                        CashAuction_Thread.Start();
+                        CashAuction_Thread_Flag = true;
+
+                        if (sellItemList.Count > 0)
+                        {
+                            Sell_Thread = new Thread(new ThreadStart(ThreadSell));
+                            Sell_Thread.SetApartmentState(ApartmentState.STA);
+                            Sell_Thread.Start();
+                            Sell_Thread_Flag = true;
+                        }
+
+                        string currTime = getCurrentTime();
+                        LogBox.Items.Add(currTime + " 장비/캐시 시작");
+                        LogBox.SelectedIndex = LogBox.Items.Count - 1;
                     }
-
-                    string currTime = getCurrentTime();
-                    LogBox.Items.Add(currTime + " 소비/기타 시작");
-                    LogBox.SelectedIndex = LogBox.Items.Count - 1;
-                }
-                if (GetAsyncKeyState(123) == -32767)
-                {
-                    MessageBox.Show("1231");
-                    SetForegroundWindow(hWnd);
-                    SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
-
-                    string[] search;
-                    search = UseImageSearch("*50 img\\search.png");
-                    if (search == null)
-                    {
-
-                    }
-                    else
-                    {
-                        globalX = Convert.ToInt32(search[1]);
-                        globalY = Convert.ToInt32(search[2]);
-                    }
-
-                    threadtype = 2;
-
-                    CashAuction_Thread = new Thread(new ThreadStart(ThreadCashAuction));
-                    CashAuction_Thread.SetApartmentState(ApartmentState.STA);
-                    CashAuction_Thread.Start();
-                    CashAuction_Thread_Flag = true;
-
-                    if (sellItemList.Count > 0)
-                    {
-                        Sell_Thread = new Thread(new ThreadStart(ThreadSell));
-                        Sell_Thread.SetApartmentState(ApartmentState.STA);
-                        Sell_Thread.Start();
-                        Sell_Thread_Flag = true;
-                    }
-
-                    string currTime = getCurrentTime();
-                    LogBox.Items.Add(currTime + " 장비/캐시 시작");
-                    LogBox.SelectedIndex = LogBox.Items.Count - 1;
                 }
             }
+            
         }
         [STAThreadAttribute]
         static void ThreadCashAuction()
@@ -1008,9 +1011,7 @@ namespace NJAuction
             int hWnd = FindWindow(null, "MapleStory");
             SetForegroundWindow(hWnd);
             SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
-
-            MessageBox.Show("1231");
-
+            
             keyAsyncTrhead = new Thread(new ThreadStart(ThreadProc));
             keyAsyncTrhead.Start();
             KeyAsync_Thread_Flag = true;
