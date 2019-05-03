@@ -118,7 +118,6 @@ namespace NJAuction
 
         static Label lb1;
         static TextBox tb1;
-        static TextBox tb2;
         static PictureBox PB;
         static ListBox LogBox;
         static CheckBox CB1, CB2;
@@ -168,7 +167,7 @@ namespace NJAuction
             DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
             lb1 = this.label1;
-            tb2 = this.textBox2;
+
             LogBox = this.listBox1;
 
             right = Screen.PrimaryScreen.Bounds.Right;
@@ -223,8 +222,21 @@ namespace NJAuction
             }
             if (threadtype == 1)
             {
-                string str = tb2.Text.ToString();
-                str_to_dec_write(str);
+                keybd_event(nineKey, 0, KEYDOWN, ref Info);
+                Thread.Sleep(2);
+                keybd_event(nineKey, 0, KEYUP, ref Info);
+
+                keybd_event(nineKey, 0, KEYDOWN, ref Info);
+                Thread.Sleep(2);
+                keybd_event(nineKey, 0, KEYUP, ref Info);
+
+                keybd_event(nineKey, 0, KEYDOWN, ref Info);
+                Thread.Sleep(2);
+                keybd_event(nineKey, 0, KEYUP, ref Info);
+
+                keybd_event(nineKey, 0, KEYDOWN, ref Info);
+                Thread.Sleep(2);
+                keybd_event(nineKey, 0, KEYUP, ref Info);
 
                 keybd_event(EnterKey, 0, KEYDOWN, ref Info);
                 Thread.Sleep(5);
@@ -949,15 +961,7 @@ namespace NJAuction
                 LogBox.SelectedIndex = LogBox.Items.Count - 1;
             }
 
-            currTime = getCurrentTime();
-            LogBox.Items.Add(currTime + " 판매 등록 완료");
-            LogBox.SelectedIndex = LogBox.Items.Count - 1;
-
-            currTime = getCurrentTime();
-            LogBox.Items.Add(currTime + " 구매 매크로 재시작");
-            LogBox.SelectedIndex = LogBox.Items.Count - 1;
-
-            Thread.Sleep(7200000);                  //1시간에 한번 판매 등록 수행
+            Thread.Sleep(7200000);                //1시간에 한번 판매 등록 수행
 
             Sell_Thread = new Thread(new ThreadStart(ThreadSell));
             Sell_Thread.SetApartmentState(ApartmentState.STA);
