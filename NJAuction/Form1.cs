@@ -252,10 +252,10 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            if (!get_window_pixel(604, 162).Equals("34") && get_window_pixel(284,217).Equals("204"))
-            {                
+            if (!get_window_pixel(604, 162).Equals("34") && get_window_pixel(284, 217).Equals("204"))
+            {
                 buy(Info);
-                
+
                 string currTime = getCurrentTime();
                 LogBox.Items.Add(currTime + " 구매 시도 ");
                 LogBox.SelectedIndex = LogBox.Items.Count - 1;
@@ -271,7 +271,6 @@ namespace NJAuction
         static void ThreadProc()
         {
             int Info = 0;
-            for (; ; )
             {                   
                 if (GetAsyncKeyState(112) == -32767)
                 {
