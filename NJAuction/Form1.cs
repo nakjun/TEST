@@ -116,11 +116,11 @@ namespace NJAuction
 
         static int timestep = 35;
 
-        static Label lb1;
-        static TextBox tb1;
+        static Label lb1, lb2;
+        static TextBox tb1, tb2;
         static PictureBox PB;
         static ListBox LogBox;
-        static CheckBox CB1, CB2;
+        static CheckBox CB1, CB2, CB3;
 
 
         static List<Item> itemlist;
@@ -167,6 +167,11 @@ namespace NJAuction
             DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
 
             lb1 = this.label1;
+            lb2 = this.label6;
+
+            CB3 = this.checkBox3;
+
+            tb2 = this.textBox2;
 
             LogBox = this.listBox1;
 
@@ -222,21 +227,7 @@ namespace NJAuction
             }
             if (threadtype == 1)
             {
-                keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(2);
-                keybd_event(nineKey, 0, KEYUP, ref Info);
-
-                keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(2);
-                keybd_event(nineKey, 0, KEYUP, ref Info);
-
-                keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(2);
-                keybd_event(nineKey, 0, KEYUP, ref Info);
-
-                keybd_event(nineKey, 0, KEYDOWN, ref Info);
-                Thread.Sleep(2);
-                keybd_event(nineKey, 0, KEYUP, ref Info);
+                str_to_dec_write(tb2.Text);
 
                 keybd_event(EnterKey, 0, KEYDOWN, ref Info);
                 Thread.Sleep(5);
@@ -248,7 +239,8 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            HttpGet("구매시도");
+            if(CB3.Checked)
+                HttpGet("구매");
 
         }
 
@@ -275,7 +267,8 @@ namespace NJAuction
                 buyCount++;
 
                 lb1.Text = buyCount.ToString();
-                Thread.Sleep(1);
+                Thread.Sleep(200);
+
             }
         }
 
@@ -1022,9 +1015,7 @@ namespace NJAuction
             sellItemList.Clear();
 
             SYSTEMID = this.textBox1.Text;
-
-            MessageBox.Show("아이디가 잘 저장되었습니다");
-
+            
             sellItem nItem = new sellItem();
             bool type = false;
             if (checkBox1.Checked)
@@ -1032,8 +1023,7 @@ namespace NJAuction
                 if (sobi1.Checked) type = true;
                 else type = false;
 
-                nItem.setItemInformation(int.Parse(pos1.Text), int.Parse(price1.Text), true, type);
-                MessageBox.Show(nItem.getItemInformation());
+                nItem.setItemInformation(int.Parse(pos1.Text), int.Parse(price1.Text), true, type);                
                 sellItemList.Add(nItem);
             }
             nItem = new sellItem();
@@ -1042,12 +1032,11 @@ namespace NJAuction
                 if (sobi2.Checked) type = true;
                 else type = false;
 
-                nItem.setItemInformation(int.Parse(pos2.Text), int.Parse(price2.Text), true, type);
-                MessageBox.Show(nItem.getItemInformation());
+                nItem.setItemInformation(int.Parse(pos2.Text), int.Parse(price2.Text), true, type);                
                 sellItemList.Add(nItem);
             }
 
-            MessageBox.Show("판매정보가 잘 저장되었습니다");
+            MessageBox.Show("정보 저장 완료");
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 정보 저장 완료");
@@ -1199,6 +1188,115 @@ namespace NJAuction
 
 
             MessageBox.Show(Control.MousePosition.X.ToString() + " " + Control.MousePosition.Y.ToString());
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            SetForegroundWindow(hWnd);
+            SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
+
+            string[] search;
+            search = UseImageSearch("*50 img\\search.png");
+            if (search == null)
+            {
+
+            }
+            else
+            {
+                globalX = Convert.ToInt32(search[1]);
+                globalY = Convert.ToInt32(search[2]);
+            }
+
+            threadtype = 1;
+            Auction_Thread = new Thread(new ThreadStart(ThreadAuction));
+            Auction_Thread.SetApartmentState(ApartmentState.STA);
+            Auction_Thread.Start();
+            Auction_Thread_Flag = true;
+
+            if (sellItemList.Count > 0)
+            {
+                Sell_Thread = new Thread(new ThreadStart(ThreadSell));
+                Sell_Thread.SetApartmentState(ApartmentState.STA);
+                Sell_Thread.Start();
+                Sell_Thread_Flag = true;
+            }
+
+            string currTime = getCurrentTime();
+            LogBox.Items.Add(currTime + " 소비/기타 시작");
+            LogBox.SelectedIndex = LogBox.Items.Count - 1;
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            SetForegroundWindow(hWnd);
+            SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
+
+            string[] search;
+            search = UseImageSearch("*50 img\\search.png");
+            if (search == null)
+            {
+
+            }
+            else
+            {
+                globalX = Convert.ToInt32(search[1]);
+                globalY = Convert.ToInt32(search[2]);
+            }
+
+            threadtype = 2;
+            CashAuction_Thread = new Thread(new ThreadStart(ThreadCashAuction));
+            CashAuction_Thread.SetApartmentState(ApartmentState.STA);
+            CashAuction_Thread.Start();
+            CashAuction_Thread_Flag = true;
+
+            if (sellItemList.Count > 0)
+            {
+                Sell_Thread = new Thread(new ThreadStart(ThreadSell));
+                Sell_Thread.SetApartmentState(ApartmentState.STA);
+                Sell_Thread.Start();
+                Sell_Thread_Flag = true;
+            }
+
+
+            string currTime = getCurrentTime();
+            LogBox.Items.Add(currTime + " 장비/캐시 시작");
+            LogBox.SelectedIndex = LogBox.Items.Count - 1;
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            if (Auction_Thread_Flag == true)
+            {
+                Auction_Thread.Abort();
+                AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
+                string currTime = getCurrentTime();
+                LogBox.Items.Add(currTime + " 매크로 중지");
+                LogBox.SelectedIndex = LogBox.Items.Count - 1;
+            }
+            if (CashAuction_Thread_Flag == true)
+            {
+                CashAuction_Thread.Abort();
+                AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
+                string currTime = getCurrentTime();
+                LogBox.Items.Add(currTime + " 매크로 중지");
+                LogBox.SelectedIndex = LogBox.Items.Count - 1;
+            }
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            foreach (Process process in Process.GetProcesses())
+            {
+                if (process.ProcessName.ToUpper().StartsWith("NJ"))
+                {
+                    process.Kill();
+                }
+            }
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            datasave();
         }
 
     }
