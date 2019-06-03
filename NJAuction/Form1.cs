@@ -177,9 +177,6 @@ namespace NJAuction
             System.DateTime.Now.ToString("yyyy");
             DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             
-            
-            
-
             lb1 = this.label1;
             lb2 = this.label6;
 
@@ -1091,6 +1088,11 @@ namespace NJAuction
                 {
                     string[] sp = line.Split('=');
                     string[] item = sp[1].Split('/');
+
+                    stop_mapping = int.Parse(item[0]);
+                    exit_mapping = int.Parse(item[1]);
+                    sobi_mapping = int.Parse(item[2]);
+                    jangbi_mapping = int.Parse(item[3]);
                 }
             }
             sr.Close();
