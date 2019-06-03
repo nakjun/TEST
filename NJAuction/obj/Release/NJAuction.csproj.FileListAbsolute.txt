@@ -8,3 +8,7 @@ C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Release\NJAuction.pdb
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.exe
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.pdb
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.csprojResolveAssemblyReference.cache
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Release\x86\liblept1753.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Release\x86\libtesseract3052.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Release\x64\liblept1753.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Release\x64\libtesseract3052.dll

@@ -14,12 +14,10 @@ using System.Threading;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 
-
 namespace NJAuction
 {
     public partial class Form1 : Form
     {
-
 
         [DllImport("ImageSearchDLL.dll")]
         private static extern IntPtr ImageSearch(int x, int y, int right, int bottom, [MarshalAs(UnmanagedType.LPStr)]string imagePath);
@@ -63,6 +61,10 @@ namespace NJAuction
         [DllImport("user32.dll", SetLastError = true)]
 
         static extern int GetWindowRgn(IntPtr hWnd, IntPtr hRgn);
+
+        [DllImport("user32.dll", EntryPoint = "PostMessageW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool PostMessageW(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("gdi32.dll")]
 
@@ -157,6 +159,15 @@ namespace NJAuction
 
         static string SYSTEMID = "";
 
+        static string money = "";
+
+        static Bitmap bitmap1, bitmap2;
+
+        static int stop_mapping = 112;
+        static int exit_mapping = 113;
+        static int sobi_mapping = 122;
+        static int jangbi_mapping = 123;
+
         public Form1()
         {
             InitializeComponent();
@@ -165,6 +176,9 @@ namespace NJAuction
 
             System.DateTime.Now.ToString("yyyy");
             DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+            
+            
+            
 
             lb1 = this.label1;
             lb2 = this.label6;
@@ -182,7 +196,7 @@ namespace NJAuction
 
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 프로그램 시작");
-
+            //money = findmoney();
         }
 
         public static string getCurrentTime()
@@ -198,7 +212,7 @@ namespace NJAuction
 
         public static void HttpGet(string type)
         {
-            string url = "http://220.69.209.170/nj/insert.php?";
+            string url = "http://cglab.sch.ac.kr/nj/insert.php?";
             url += "id=" + SYSTEMID;
             url += "&time=" + getCurrentTime();
             url += "&status=" + type;
@@ -239,9 +253,13 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            if(CB3.Checked)
-                HttpGet("구매");
-
+            bitmap2 = findmoney();
+            
+            if (CB3.Checked && !ImageCmp(bitmap1, bitmap2))
+            {                
+                HttpGet("구매성공");
+                bitmap1 = bitmap2;
+            }
         }
 
         public static void singleBuy(int Info)
@@ -256,7 +274,7 @@ namespace NJAuction
             Thread.Sleep(1);
             keybd_event(EnterKey, 0, KEYUP, ref Info);
 
-            if (!get_window_pixel(604, 162).Equals("34") && get_window_pixel(284, 217).Equals("204"))
+            if (!get_window_pixel(604, 162).Equals("34") && get_window_pixel(284, 217).Equals("204") && get_window_pixel(286, 613).Equals("34"))
             {
                 buy(Info);
 
@@ -275,11 +293,11 @@ namespace NJAuction
         [STAThreadAttribute]
         static void ThreadProc()
         {
-            for(;;)
+            for (; ; )
             {
                 int Info = 0;
                 {
-                    if (GetAsyncKeyState(112) == -32767)
+                    if (GetAsyncKeyState(stop_mapping) == -32767)
                     {
                         if (Auction_Thread_Flag == true)
                         {
@@ -302,7 +320,7 @@ namespace NJAuction
                             Sell_Thread.Abort();
                         }
                     }
-                    if (GetAsyncKeyState(113) == -32767)
+                    if (GetAsyncKeyState(exit_mapping) == -32767)
                     {
 
                         foreach (Process process in Process.GetProcesses())
@@ -313,7 +331,7 @@ namespace NJAuction
                             }
                         }
                     }
-                    if (GetAsyncKeyState(122) == -32767)
+                    if (GetAsyncKeyState(sobi_mapping) == -32767)
                     {
                         SetForegroundWindow(hWnd);
                         SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
@@ -348,8 +366,9 @@ namespace NJAuction
                         string currTime = getCurrentTime();
                         LogBox.Items.Add(currTime + " 소비/기타 시작");
                         LogBox.SelectedIndex = LogBox.Items.Count - 1;
+                        bitmap1 = findmoney();
                     }
-                    if (GetAsyncKeyState(123) == -32767)
+                    if (GetAsyncKeyState(jangbi_mapping) == -32767)
                     {
                         SetForegroundWindow(hWnd);
                         SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
@@ -384,10 +403,11 @@ namespace NJAuction
                         string currTime = getCurrentTime();
                         LogBox.Items.Add(currTime + " 장비/캐시 시작");
                         LogBox.SelectedIndex = LogBox.Items.Count - 1;
+                        bitmap1 = findmoney();
                     }
                 }
             }
-            
+
         }
         [STAThreadAttribute]
         static void ThreadCashAuction()
@@ -1004,10 +1024,77 @@ namespace NJAuction
             int hWnd = FindWindow(null, "MapleStory");
             SetForegroundWindow(hWnd);
             SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
-            
+
             keyAsyncTrhead = new Thread(new ThreadStart(ThreadProc));
             keyAsyncTrhead.Start();
             KeyAsync_Thread_Flag = true;
+
+            dataload();
+        }
+
+        public void dataload()
+        {
+            FileStream file;
+                        
+            StreamReader sr = new StreamReader("data.ini");
+            string line;
+            int itemcount = 0;
+            sellItemList.Clear();
+            while((line=sr.ReadLine())!=null)
+            {                
+                if(line.StartsWith("ID"))
+                {                    
+                    string []sp = line.Split('=');
+                    SYSTEMID = sp[1];
+                    this.textBox1.Text = SYSTEMID;
+                }
+                else if(line.StartsWith("ITEM"))
+                {
+                    string[] sp = line.Split('=');
+
+                    string[] item = sp[1].Split('/');
+                    
+                    sellItem nItem = new sellItem();
+                    nItem.setItemInformation(int.Parse(item[0]), int.Parse(item[1]), true, bool.Parse(item[3]));
+                    
+                    
+                    if(sellItemList.Count==0)
+                    {
+                        this.checkBox1.Checked = true;
+                        if (nItem.type == false) this.etc1.Checked = true;
+                        else sobi1.Checked = true;
+                        this.pos1.Text = item[0];
+                        this.price1.Text = item[1];
+                    }
+                    else
+                    {
+                        this.checkBox2.Checked = true;
+                        if (nItem.type == false) this.etc2.Checked = true;
+                        else sobi2.Checked = true;
+                        this.pos2.Text = item[0];
+                        this.price2.Text = item[1];
+                    }
+
+                    sellItemList.Add(nItem);
+                }
+                else if(line.StartsWith("CB3"))
+                {
+                    string[] sp = line.Split('=');
+                    CB3.Checked = bool.Parse(sp[1]);                    
+                }
+                else if (line.StartsWith("TB2"))
+                {
+                    string[] sp = line.Split('=');
+                    this.textBox2.Text = sp[1];
+                }
+                else if(line.StartsWith("KEY"))
+                {
+                    string[] sp = line.Split('=');
+                    string[] item = sp[1].Split('/');
+                }
+            }
+            sr.Close();
+            sr.Dispose();
         }
 
         public void datasave()
@@ -1015,7 +1102,7 @@ namespace NJAuction
             sellItemList.Clear();
 
             SYSTEMID = this.textBox1.Text;
-            
+
             sellItem nItem = new sellItem();
             bool type = false;
             if (checkBox1.Checked)
@@ -1023,7 +1110,7 @@ namespace NJAuction
                 if (sobi1.Checked) type = true;
                 else type = false;
 
-                nItem.setItemInformation(int.Parse(pos1.Text), int.Parse(price1.Text), true, type);                
+                nItem.setItemInformation(int.Parse(pos1.Text), int.Parse(price1.Text), true, type);
                 sellItemList.Add(nItem);
             }
             nItem = new sellItem();
@@ -1032,7 +1119,7 @@ namespace NJAuction
                 if (sobi2.Checked) type = true;
                 else type = false;
 
-                nItem.setItemInformation(int.Parse(pos2.Text), int.Parse(price2.Text), true, type);                
+                nItem.setItemInformation(int.Parse(pos2.Text), int.Parse(price2.Text), true, type);
                 sellItemList.Add(nItem);
             }
 
@@ -1041,115 +1128,23 @@ namespace NJAuction
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 정보 저장 완료");
             LogBox.SelectedIndex = LogBox.Items.Count - 1;
-        }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            SetForegroundWindow(hWnd);
-            SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
 
-            string[] search;
-            search = UseImageSearch("*50 img\\search.png");
-            if (search == null)
+            FileStream file;
+
+            file = new FileStream("data.ini",FileMode.Create,FileAccess.Write);
+            StreamWriter sr = new StreamWriter(file, Encoding.UTF8);
+
+            sr.WriteLine("ID="+SYSTEMID);
+            for(int i=0;i<sellItemList.Count;i++)
             {
-
+                sr.WriteLine("ITEM="+sellItemList.ElementAt(i).position + "/" + sellItemList.ElementAt(i).price + "/true/" + sellItemList.ElementAt(i).type);
             }
-            else
-            {
-                globalX = Convert.ToInt32(search[1]);
-                globalY = Convert.ToInt32(search[2]);
-            }
-
-            threadtype = 1;
-            Auction_Thread = new Thread(new ThreadStart(ThreadAuction));
-            Auction_Thread.SetApartmentState(ApartmentState.STA);
-            Auction_Thread.Start();
-            Auction_Thread_Flag = true;
-
-            if (sellItemList.Count > 0)
-            {
-                Sell_Thread = new Thread(new ThreadStart(ThreadSell));
-                Sell_Thread.SetApartmentState(ApartmentState.STA);
-                Sell_Thread.Start();
-                Sell_Thread_Flag = true;
-            }
-
-            string currTime = getCurrentTime();
-            LogBox.Items.Add(currTime + " 소비/기타 시작");
-            LogBox.SelectedIndex = LogBox.Items.Count - 1;
-
-
-        }
-        private void button3_Click(object sender, EventArgs e)
-        {
-            SetForegroundWindow(hWnd);
-            SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
-
-            string[] search;
-            search = UseImageSearch("*50 img\\search.png");
-            if (search == null)
-            {
-
-            }
-            else
-            {
-                globalX = Convert.ToInt32(search[1]);
-                globalY = Convert.ToInt32(search[2]);
-            }
-
-            threadtype = 2;
-            CashAuction_Thread = new Thread(new ThreadStart(ThreadCashAuction));
-            CashAuction_Thread.SetApartmentState(ApartmentState.STA);
-            CashAuction_Thread.Start();
-            CashAuction_Thread_Flag = true;
-
-            if (sellItemList.Count > 0)
-            {
-                Sell_Thread = new Thread(new ThreadStart(ThreadSell));
-                Sell_Thread.SetApartmentState(ApartmentState.STA);
-                Sell_Thread.Start();
-                Sell_Thread_Flag = true;
-            }
-
-
-            string currTime = getCurrentTime();
-            LogBox.Items.Add(currTime + " 장비/캐시 시작");
-            LogBox.SelectedIndex = LogBox.Items.Count - 1;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (Auction_Thread_Flag == true)
-            {
-                Auction_Thread.Abort();
-                AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
-                string currTime = getCurrentTime();
-                LogBox.Items.Add(currTime + " 매크로 중지");
-                LogBox.SelectedIndex = LogBox.Items.Count - 1;
-            }
-            if (CashAuction_Thread_Flag == true)
-            {
-                CashAuction_Thread.Abort();
-                AutoClosingMessageBox.Show("Thread STOP!", "알림", 1200);
-                string currTime = getCurrentTime();
-                LogBox.Items.Add(currTime + " 매크로 중지");
-                LogBox.SelectedIndex = LogBox.Items.Count - 1;
-            }
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            foreach (Process process in Process.GetProcesses())
-            {
-                if (process.ProcessName.ToUpper().StartsWith("NJ"))
-                {
-                    process.Kill();
-                }
-            }
+            sr.WriteLine("CB3=" + CB3.Checked);
+            sr.WriteLine("TB2=" + tb2.Text);
+            sr.WriteLine("KEY="+stop_mapping + "/" + exit_mapping + "/" + sobi_mapping + "/" + jangbi_mapping);
+            sr.Close();
+            sr.Dispose();
         }
 
         private static string get_window_pixel(int x, int y)
@@ -1172,22 +1167,6 @@ namespace NJAuction
         private void label8_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void button6_Click_1(object sender, EventArgs e)
-        {
-            datasave();
-        }
-
-        private void button5_Click_1(object sender, EventArgs e)
-        {
-            //MessageBox.Show(get_window_pixel(431, 523).ToString());
-            //MessageBox.Show(get_window_pixel(604, 162).ToString());
-            //MessageBox.Show(get_window_pixel(284, 217).ToString());
-
-
-
-            MessageBox.Show(Control.MousePosition.X.ToString() + " " + Control.MousePosition.Y.ToString());
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -1224,6 +1203,7 @@ namespace NJAuction
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 소비/기타 시작");
             LogBox.SelectedIndex = LogBox.Items.Count - 1;
+            bitmap1 = findmoney();
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
@@ -1261,6 +1241,7 @@ namespace NJAuction
             string currTime = getCurrentTime();
             LogBox.Items.Add(currTime + " 장비/캐시 시작");
             LogBox.SelectedIndex = LogBox.Items.Count - 1;
+            bitmap1 = findmoney();
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
@@ -1297,6 +1278,43 @@ namespace NJAuction
         private void pictureBox5_Click(object sender, EventArgs e)
         {
             datasave();
+        }
+
+        public static Bitmap findmoney()
+        {
+            System.Drawing.Size mSize = new System.Drawing.Size(100, 12);
+            Bitmap image = new Bitmap(100, 12);
+            Graphics g = Graphics.FromImage(image);
+            try
+            {
+                g.CopyFromScreen(849, 78, 0, 0, mSize);
+            }
+            catch (Win32Exception w)
+            {
+                Console.WriteLine(w.Message);
+            }
+
+            return image;
+        }
+
+        public static bool ImageCmp(Bitmap src, Bitmap bmp)
+        {
+            string srcInfo, bmpInfo;
+
+            for (int i = 0; i < src.Width; i++)
+            {
+                for (int j = 0; j < src.Height; j++)
+                {
+                    srcInfo = src.GetPixel(i, j).ToString();
+                    bmpInfo = bmp.GetPixel(i, j).ToString();
+
+                    if (srcInfo != bmpInfo)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
     }
