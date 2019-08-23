@@ -52,13 +52,13 @@
             this.price2 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.price1 = new System.Windows.Forms.TextBox();
             this.sobi1 = new System.Windows.Forms.RadioButton();
+            this.pos1 = new System.Windows.Forms.TextBox();
             this.etc1 = new System.Windows.Forms.RadioButton();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.etc2 = new System.Windows.Forms.RadioButton();
             this.sobi2 = new System.Windows.Forms.RadioButton();
-            this.price1 = new System.Windows.Forms.TextBox();
-            this.pos1 = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -172,6 +172,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Image = global::NJAuction.Properties.Resources.btn_1;
             this.pictureBox1.Location = new System.Drawing.Point(12, 41);
             this.pictureBox1.Name = "pictureBox1";
@@ -192,6 +193,7 @@
             // 
             // pictureBox2
             // 
+            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox2.Image = global::NJAuction.Properties.Resources.btn_2;
             this.pictureBox2.Location = new System.Drawing.Point(79, 41);
             this.pictureBox2.Name = "pictureBox2";
@@ -209,6 +211,7 @@
             // 
             // pictureBox3
             // 
+            this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox3.Image = global::NJAuction.Properties.Resources.btn_3;
             this.pictureBox3.Location = new System.Drawing.Point(147, 41);
             this.pictureBox3.Name = "pictureBox3";
@@ -223,13 +226,14 @@
             this.label8.ForeColor = System.Drawing.Color.Crimson;
             this.label8.Location = new System.Drawing.Point(280, 10);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(192, 15);
+            this.label8.Size = new System.Drawing.Size(104, 15);
             this.label8.TabIndex = 30;
-            this.label8.Text = "NJ AUCTION V8.4 [메소분석 추가]";
+            this.label8.Text = "NJ AUCTION V8.5";
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // pictureBox4
             // 
+            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox4.Image = global::NJAuction.Properties.Resources.btn_4;
             this.pictureBox4.Location = new System.Drawing.Point(213, 41);
             this.pictureBox4.Name = "pictureBox4";
@@ -240,6 +244,7 @@
             // 
             // pictureBox5
             // 
+            this.pictureBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
             this.pictureBox5.Location = new System.Drawing.Point(11, 79);
             this.pictureBox5.Name = "pictureBox5";
@@ -312,6 +317,13 @@
             this.groupBox1.TabIndex = 58;
             this.groupBox1.TabStop = false;
             // 
+            // price1
+            // 
+            this.price1.Location = new System.Drawing.Point(198, 16);
+            this.price1.Name = "price1";
+            this.price1.Size = new System.Drawing.Size(74, 23);
+            this.price1.TabIndex = 61;
+            // 
             // sobi1
             // 
             this.sobi1.AutoSize = true;
@@ -323,6 +335,13 @@
             this.sobi1.Text = "소비";
             this.sobi1.UseVisualStyleBackColor = true;
             // 
+            // pos1
+            // 
+            this.pos1.Location = new System.Drawing.Point(162, 16);
+            this.pos1.Name = "pos1";
+            this.pos1.Size = new System.Drawing.Size(31, 23);
+            this.pos1.TabIndex = 60;
+            // 
             // etc1
             // 
             this.etc1.AutoSize = true;
@@ -333,6 +352,16 @@
             this.etc1.TabStop = true;
             this.etc1.Text = "기타";
             this.etc1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(0, 19);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(61, 19);
+            this.checkBox1.TabIndex = 59;
+            this.checkBox1.Text = "판매 1";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // etc2
             // 
@@ -355,30 +384,6 @@
             this.sobi2.TabStop = true;
             this.sobi2.Text = "소비";
             this.sobi2.UseVisualStyleBackColor = true;
-            // 
-            // price1
-            // 
-            this.price1.Location = new System.Drawing.Point(198, 16);
-            this.price1.Name = "price1";
-            this.price1.Size = new System.Drawing.Size(74, 23);
-            this.price1.TabIndex = 61;
-            // 
-            // pos1
-            // 
-            this.pos1.Location = new System.Drawing.Point(162, 16);
-            this.pos1.Name = "pos1";
-            this.pos1.Size = new System.Drawing.Size(31, 23);
-            this.pos1.TabIndex = 60;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(0, 19);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(61, 19);
-            this.checkBox1.TabIndex = 59;
-            this.checkBox1.Text = "판매 1";
-            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
