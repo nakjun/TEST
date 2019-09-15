@@ -14,6 +14,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Drawing.Imaging;
 
+using System.Net.Sockets;
 namespace NJAuction
 {
     public partial class Form1 : Form
@@ -177,6 +178,13 @@ namespace NJAuction
         static int systemFlag = 0;
         static WebRequest request;
         static WebResponse response;
+
+        string server_ip;
+        Thread server_thread;
+
+        IPEndPoint ep;
+        Socket server;
+
         public Form1()
         {
             InitializeComponent();
@@ -203,8 +211,88 @@ namespace NJAuction
 
             lb1.Text = buyCount.ToString();
             //money = findmoney();
+
+            Updateecute();
+
+        }
+       
+        public void Updateecute()
+        {
+            server_thread = new Thread(new ThreadStart(StartServer));
+            server_thread.Start();
         }
 
+        private void StartServer()
+        {
+            int recv = 0;
+            byte[] data = new byte[256];
+
+            try
+            {
+                ep = new IPEndPoint(IPAddress.Any, 1006);
+                server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                server.Bind(ep);
+
+                EndPoint remoteEP = (EndPoint)ep;
+
+                recv = server.ReceiveFrom(data, ref remoteEP);
+
+                //macro command 
+                while (true)
+                {
+                    data = new byte[256];
+                    recv = server.ReceiveFrom(data, ref remoteEP);
+                    string recvData = Encoding.UTF8.GetString(data, 0, recv);
+
+                    if (recvData.Contains("inactivate"))
+                    {
+                        //do stop
+                        this.Invoke(new Action(delegate ()
+                        {
+                            pictureBox3_Click(this.pictureBox3, null);
+                        }));
+
+                        // inactivate();
+                    }
+                    else
+                    {
+                        //do start
+                        if (recvData.Contains("equipment"))
+                        {
+                            //start equipment
+                            // equipment_activate();
+                            this.Invoke(new Action(delegate ()
+                            {
+                                pictureBox2_Click(this.pictureBox2, null);
+                            }));
+
+
+                        }
+                        else
+                        {
+                            //start consume
+                            this.Invoke(new Action(delegate ()
+                            {
+                                pictureBox1_Click(this.pictureBox1, null);
+                            }));
+
+
+                            // consume_activate();
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                server.Close();
+                server_thread.Abort();
+                Updateecute();
+            }
+
+
+        }
         public static string getCurrentTime()
         {
             System.DateTime.Now.ToString("yyyy");

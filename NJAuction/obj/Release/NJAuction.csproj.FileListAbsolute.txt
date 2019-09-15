@@ -12,3 +12,17 @@ C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.Form1.resource
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.Meso.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.Properties.Resources.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Release\NJAuction.csproj.GenerateResource.Cache
+D:\git\nj_auction\TEST\NJAuction\bin\Release\NJAuction.exe.config
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.exe
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.pdb
+D:\git\nj_auction\TEST\NJAuction\bin\Release\x86\liblept1753.dll
+D:\git\nj_auction\TEST\NJAuction\bin\Release\x86\libtesseract3052.dll
+D:\git\nj_auction\TEST\NJAuction\bin\Release\x64\liblept1753.dll
+D:\git\nj_auction\TEST\NJAuction\bin\Release\x64\libtesseract3052.dll
+D:\git\nj_auction\TEST\NJAuction\bin\Release\NJAuction.exe
+D:\git\nj_auction\TEST\NJAuction\bin\Release\NJAuction.pdb
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.csprojResolveAssemblyReference.cache
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.Form1.resources
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.Meso.resources
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.Properties.Resources.resources
+D:\git\nj_auction\TEST\NJAuction\obj\Release\NJAuction.csproj.GenerateResource.Cache
