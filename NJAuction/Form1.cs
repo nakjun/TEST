@@ -219,6 +219,7 @@ namespace NJAuction
         public void Updateecute()
         {
             server_thread = new Thread(new ThreadStart(StartServer));
+            server_thread.IsBackground = true;
             server_thread.Start();
         }
 
