@@ -17,3 +17,7 @@ C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Form1.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Properties.Resources.resources
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.csproj.GenerateResource.Cache
 C:\Users\nj\Documents\GitHub\TEST\NJAuction\obj\Debug\NJAuction.Meso.resources
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\x86\liblept1753.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\x86\libtesseract3052.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\x64\liblept1753.dll
+C:\Users\nj\Documents\GitHub\TEST\NJAuction\bin\Debug\x64\libtesseract3052.dll
