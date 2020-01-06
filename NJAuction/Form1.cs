@@ -193,7 +193,7 @@ namespace NJAuction
 
             System.DateTime.Now.ToString("yyyy");
             DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-            
+
             lb1 = this.label1;
             lb2 = this.label6;
 
@@ -284,6 +284,7 @@ namespace NJAuction
                         }
                     }
                 }
+                Thread.Sleep(10);
             }
             catch (Exception e)
             {
@@ -1170,8 +1171,8 @@ namespace NJAuction
             SetForegroundWindow(hWnd);
             SetWindowPos(hWnd, 0, 1, 1, 800, 600, 0x01);
 
-            keyAsyncTrhead = new Thread(new ThreadStart(ThreadProc));
-            keyAsyncTrhead.Start();
+            //keyAsyncTrhead = new Thread(new ThreadStart(ThreadProc));
+            //keyAsyncTrhead.Start();
             KeyAsync_Thread_Flag = true;
 
             dataload();
